@@ -34,4 +34,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 #my own ignores
-*.setting.js
+# *.setting.js
