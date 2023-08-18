@@ -38,7 +38,7 @@ export default function () {
                 src={session?.user.image} 
                 alt="profile photo" />
             </nav>
-            <div className="w-full sm:w-[600px] h-full overflow-y-scroll px-4">
+            <div className="w-full sm:w-[600px] h-full overflow-y-scroll px-4 no-scrollbar">
             {/*feeds holder*/}
 
                 <WritePost />

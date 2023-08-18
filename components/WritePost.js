@@ -26,7 +26,7 @@ export default function WritePost() {
     }
     
     return (
-        <form className="flex flex-col border border-gray-100 bg-white rounded-md shadow-md p-3 mb-4 gap-4">
+        <div className="flex flex-col border border-gray-100 bg-white rounded-md shadow-md p-3 mb-4 gap-4">
             <div className='flex flex-row justify-between items-center gap-4'>
                 <Image 
                 className="rounded-full" 
@@ -35,7 +35,7 @@ export default function WritePost() {
                 src={session?.user.image} 
                 alt="profile photo" />
 
-                <div className='flex flex-col gap-2'>
+                <form className='w-full flex flex-col gap-2'>
                     <TextField 
                     multiline={true}
                     className='w-full'
@@ -46,7 +46,7 @@ export default function WritePost() {
                     variant='outlined'
                     className=''
                     onClick={handleCreatePost}>Post</Button>
-                </div>
+                </form>
             </div>
             <hr style={{color:'black'}}/>
 
@@ -64,6 +64,6 @@ export default function WritePost() {
                     Feelig/activity
                 </button>
             </div>
-        </form>
+        </div>
     )
 }
