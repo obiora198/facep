@@ -22,7 +22,7 @@ export default function WritePost() {
 
         })
         .then(() => alert('Your post was published'))
-        .catch(error => console.error(error))
+        .catch(error => console.error(error));
     }
     
     return (
@@ -36,12 +36,6 @@ export default function WritePost() {
                 alt="profile photo" />
 
                 <div className='flex flex-col gap-2'>
-                    {/* <textarea 
-                    className='w-full p-3 focus:outline-0 bg-gray-200 rounded-full'
-                    placeholder='Write a post'
-                    rows={1}
-                    value={formInput}
-                    onChange={(text) => setFormInput(text)}/> */}
                     <TextField 
                     multiline={true}
                     className='w-full'
