@@ -17,7 +17,7 @@ export default function () {
         if (!session) {
             router.push('/auth/signup')
         }
-    },[])
+    },[]);
 
   return (
     <>
