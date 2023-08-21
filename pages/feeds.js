@@ -33,7 +33,7 @@ export default function () {
                 </div>
 
                 <GoSignOut 
-                className='text-gray-800 my-3'
+                className='text-gray-800'
                 onClick={signOut}/>
 
                 <Image 
