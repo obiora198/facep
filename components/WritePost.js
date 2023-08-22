@@ -7,7 +7,8 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import { Button,TextField } from '@mui/material';
 import { db } from '@/settings/firebase.setting';
 import { collection,addDoc } from 'firebase/firestore'
-import { async } from '@firebase/util';
+import { cdnImages } from '@/assets/demo_cdn_images';
+import { rangeOfRandNums } from '@/assets/range-of-rand-nums';
 
 export default function WritePost() {
     const {data:session} = useSession();
@@ -19,7 +20,7 @@ export default function WritePost() {
             body:formInput,
             author:session.user.email,
             postedAt:new Date().getTime(),
-
+            imageUrl:cdnImages[rangeOfRandNums(0,cdnImages.length - 1)]
         })
         .then(() => {
             setFormInput('')
@@ -35,7 +36,7 @@ export default function WritePost() {
                 className="rounded-full" 
                 width={48} 
                 height={48}
-                src={session ? session?.user.image : '/facepal_logo.png'}  
+                src={session?.user.image}  
                 alt="profile photo" />
 
                 <div className='w-full flex flex-col gap-2'>
