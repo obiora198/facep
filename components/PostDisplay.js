@@ -7,7 +7,10 @@ import PublicIcon from '@mui/icons-material/Public';
 import ClearIcon from '@mui/icons-material/Clear';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-export default function PostDisplay() {
+
+
+
+export default function PostDisplay({timePosted,body,postImage}) {
     const {data:session} = useSession();
 
     return (
@@ -22,7 +25,7 @@ export default function PostDisplay() {
                     <div className='flex flex-col'>
                         <small className="text-gray-800">{session?.user.name}</small>
                         <small className='text-gray-500'>
-                            1d . 
+                            {timePosted} 
                             <PublicIcon sx={{fontSize:15}} />
                         </small>
                     </div>
@@ -39,9 +42,9 @@ export default function PostDisplay() {
                 </li>
             </ul>
             
-            <p className='px-4'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, tenetur. Natus provident id quae delectus ab. Asperiores, veritatis!</p>
+            <p className='px-4'>{body}</p>
             <Image  
-            src='/fones.jpg' 
+             src={postImage}
             width={50}
             height={50}
             className='w-full py-4'/>

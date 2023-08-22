@@ -21,32 +21,37 @@ export default function WritePost() {
             postedAt:new Date().getTime(),
 
         })
-        .then(() => alert('Your post was published'))
+        .then(() => {
+            setFormInput('')
+            alert('Your post was published')
+        })
         .catch(error => console.error(error));
     }
     
     return (
         <div className="flex flex-col border border-gray-100 bg-white rounded-md shadow-md p-3 mb-4 gap-4">
-            <div className='flex flex-row justify-between items-center gap-4'>
+            <div className='flex flex-row items-center gap-4'>
                 <Image 
                 className="rounded-full" 
                 width={48} 
                 height={48}
-                src={session?.user.image} 
+                src={session ? session?.user.image : '/facepal_logo.png'}  
                 alt="profile photo" />
 
-                <form className='w-full flex flex-col gap-2'>
+                <div className='w-full flex flex-col gap-2'>
                     <TextField 
                     multiline={true}
                     className='w-full'
                     value={formInput}
                     onChange={(text) => setFormInput(text.target.value)}/>
 
-                    <Button 
+                    {formInput.length > 0 
+                    ? <Button 
                     variant='outlined'
-                    className=''
+                    className='block w-[100px]'
                     onClick={handleCreatePost}>Post</Button>
-                </form>
+                    : null}
+                </div>
             </div>
             <hr style={{color:'black'}}/>
 
