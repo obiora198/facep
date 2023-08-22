@@ -1,6 +1,7 @@
-import { useEffect,useContext } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '@/settings/globals';
 import Image from 'next/image';
+import Head from 'next/head';
 import Link from "next/link";
 import { useRouter } from 'next/router';
 
@@ -8,24 +9,26 @@ export default function Home() {
   const router = useRouter();
   const {ip,signedIn} = useContext(AppContext);
 
-
-  console.log(ip, signedIn);
-  // console.log(router.query.language);
-
-  // useEffect(()=>{
-  //   setTimeout(()=>{
-  //     router.push('/account/make-transfer')
-  //   },5000)
-  // },[]);
-
   return (
     <>
+      <Head>
+        <link rel="icon" href="/facepal_icon_logo.png" />
+        <meta name="description" content="The Coolest way to connect with friends and hold money" />
+        <meta name="keywords" content="facepal" />
+        <title>facepal | Connect with friends</title>
+      </Head>
       <div className="h-screen w-full flex flex-col justify-around mobile-bg sm:tablet-bg lg:desktop-bg">
-        <Image src="/imgs/bg-mobile.jpg" width={60} height={60} className="h-screen w-full sm:hidden" alt="cover image"/>
         <div className="w-full flex flex-col sm:flex-row justify-center items-center gap-4 px-8 sm:px-10 lg:px-24">
             <div className="w-full sm:min-h-[480px] bg-indigo-300/20 py-6 sm:py-10 px-[40px] rounded-lg">
-                <h1 className="text-indigo-800 text-4xl sm:text-6xl font-mono font-bold">facepal</h1>
-                <h2 className="text-2xl sm:text-3xl mt-4">The Coolest way to connect with friends and hold money!</h2>
+              <Image 
+              width={300}
+              height={80}
+              src="/facepal_logo.png"
+              alt="facepal logo"/>
+
+              <h2 className="text-2xl sm:text-3xl mt-4">
+                The Coolest way to connect with friends and hold money!
+              </h2>
             </div>
             <div className="w-full sm:min-h-[480px] flex flex-col gap-5">
                 <form className="flex flex-col gap-3">
