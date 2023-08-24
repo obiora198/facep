@@ -2,10 +2,9 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import PublicIcon from '@mui/icons-material/Public';
-import ClearIcon from '@mui/icons-material/Clear';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { hoursAgo } from '@/assets/hours-ago';
 
 
 
@@ -25,7 +24,7 @@ export default function PostDisplay({timePosted,body,postImage}) {
                     <div className='flex flex-col'>
                         <small className="text-gray-800">{session?.user.name}</small>
                         <small className='text-gray-500'>
-                            {timePosted} 
+                            <span>{hoursAgo(timePosted)}hours ago</span> 
                             <PublicIcon sx={{fontSize:15}} />
                         </small>
                     </div>

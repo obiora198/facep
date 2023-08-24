@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
+import Head from 'next/head';
+import Link from 'next/link';
 import { GoSignOut } from 'react-icons/go';
 import { useSession,signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -39,6 +41,11 @@ export default function () {
 
   return (
     <>
+    <Head>
+        <link rel='shortcut icon' href='facepal_icon_logo.ico' type='image/x-icon' />
+        <title>facepal | connect with friends</title>
+        <meta name='description' content='facepal is the coolest social media platform to connect with friends and hold money'/>
+    </Head>
         <main 
         className="h-screen relative flex flex-col items-center justify-center pt-20 bg-scroll bg-gray-200">
             <nav className="w-full h-19 flex flex-row justify-between items-center fixed top-0 left-0 right-0 bg-white shadow-md p-2">
@@ -54,12 +61,14 @@ export default function () {
                 className='text-gray-800'
                 onClick={signOut}/>
 
-                <Image 
-                className="rounded-full" 
-                width={48} 
-                height={48}
-                src={session?.user.image} 
-                alt="profile photo" />
+                <Link href='/account/profile'>
+                    <Image 
+                    className="rounded-full" 
+                    width={48} 
+                    height={48}
+                    src={session?.user.image} 
+                    alt="profile photo" />
+                </Link>
             </nav>
             <div className="w-full sm:w-[600px] h-full overflow-y-scroll px-4 no-scrollbar">
             {/*feeds holder*/}
