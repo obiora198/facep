@@ -13,12 +13,11 @@ export default function () {
     const {data:session} = useSession();
     const router = useRouter();
     const [userPosts,setUserPosts] = React.useState([]);
-    const userEmail = session?.user?.email;
 
     const handleGetUserPost = async () => {
         const q = query(
             collection(db,'posts'),
-            where('author','==',userEmail),
+            where('author','==',session.user.email),
             orderBy('postedAt','desc')
         );
         const onSnapShot = await getDocs(q);
