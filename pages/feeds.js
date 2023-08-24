@@ -16,8 +16,6 @@ export default function () {
     const [posts,setPosts] = useState([]);
     const router = useRouter();
 
-    console.log(posts);
-
     React.useEffect(() => {
         if (!session) {
             router.push('/auth/signup')

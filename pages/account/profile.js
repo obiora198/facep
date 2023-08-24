@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { GoSignOut } from 'react-icons/go';
 import { useSession,signOut } from 'next-auth/react';
@@ -31,8 +31,6 @@ export default function () {
         }))
     }
     handleGetUserPost();
-
-    console.log(session);
 
     React.useEffect(() => {
         if (!session) {
