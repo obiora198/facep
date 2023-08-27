@@ -1,18 +1,65 @@
-import Image from 'next/image'
+import * as React from 'react';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import PublicIcon from '@mui/icons-material/Public';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { hoursAgo } from '@/assets/hours-ago';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Button,TextField } from '@mui/material';
+import CustomDialog from './CustomDialog';
+import { db } from '@/settings/firebase.setting';
+import { doc,deleteDoc,updateDoc } from 'firebase/firestore';
 
-
-
-
-export default function PostDisplay({timePosted,body,postImage}) {
+export default function PostDisplay({postId,timePosted,body,postImage}) {
     const {data:session} = useSession();
+    const [updatePost,setUpdatePost] = React.useState(body);
+
+    //MENU CONTROL >>>> START
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
+    //MENU CONTROL >>>> END
+
+    //DIALOG CONTROL >>>> START
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
+    const handleClickOpenDialog = () => setOpenDialog(true);
+    const handleCloseDialog = () => setOpenDialog(false);
+    const handleClickOpenUpdateDialog = () => setOpenUpdateDialog(true);
+    const handleCloseUpdateDialog = () => setOpenUpdateDialog(false);
+    //DIALOG CONTROL >>>> END
+
+    //FUNCTION FOR DELETE POST
+    const handleDeletePost = async () => {
+        await deleteDoc(doc(db,'posts',postId))
+        .then(() => {
+            alert('post deleted');
+            setOpenDialog(false);
+            handleClose();
+        })
+        .catch(e => console.error(e))
+    }
+
+    // FUNCTION TO UPDATE POST 
+    const handleUpdatePost = async () => {
+        await updateDoc(doc(db, 'posts', postId),{
+            body: updatePost,
+            postedAt:new Date().getTime()
+        })
+        .then(() => {
+            alert('Post Updated');
+            setOpenUpdateDialog(false);
+            handleClose();
+        })
+        .catch(e => console.error(e))
+    }
 
     return (
+        <>
         <div className="border border-gray-100 bg-white rounded-md shadow-md py-4 mb-4">
             <ul className="flex justify-between px-4">
                 <li className="flex flex-row gap-1 items-center">
@@ -24,7 +71,7 @@ export default function PostDisplay({timePosted,body,postImage}) {
                     <div className='flex flex-col'>
                         <small className="text-gray-800">{session?.user.name}</small>
                         <small className='text-gray-500'>
-                            <span>{hoursAgo(timePosted)}hours ago</span> 
+                            <span>{hoursAgo(timePosted)} hours ago</span>
                             <PublicIcon sx={{fontSize:15}} />
                         </small>
                     </div>
@@ -32,7 +79,8 @@ export default function PostDisplay({timePosted,body,postImage}) {
                 <li>
                     <div className="text-gray-700">
                         <button className='p-2 hover:bg-gray-200 rounded-full'>
-                            <MoreHorizIcon />
+                            <MoreHorizIcon
+                            onClick={handleClick} />
                         </button>
                     </div>
                 </li>
@@ -40,7 +88,7 @@ export default function PostDisplay({timePosted,body,postImage}) {
             
             <p className='px-4'>{body}</p>
             <Image  
-             src={postImage}
+            src={postImage}
             width={560}
             height={560}
             alt='post image'
@@ -67,6 +115,56 @@ export default function PostDisplay({timePosted,body,postImage}) {
                     Comment
                 </button>
             </div>
-        </div> 
+        </div>  
+
+        <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        >
+            <MenuItem onClick={handleClickOpenUpdateDialog} >Update</MenuItem>
+            <MenuItem onClick={handleClickOpenDialog}>Delete</MenuItem>
+        </Menu>
+        {/* DELETE POST CUSTOM DIALOG  */}
+        <CustomDialog 
+        openProp={openDialog} 
+        handleCloseProp={handleCloseDialog} 
+        title='Delete post?'>
+            <p>Confirm post deletion</p>
+            <Button 
+            variant='outlined' 
+            color='error' 
+            onClick={handleDeletePost}>
+                Yes, delete
+            </Button>
+        </CustomDialog>
+        {/* UPDATE POST CUSTOM DIALOG  */}
+        <CustomDialog 
+        openProp={openUpdateDialog} 
+        handleCloseProp={handleCloseUpdateDialog} 
+        title='Edit post'>
+            <TextField 
+            multiline={true}
+            className='w-full my-4'
+            value={updatePost}
+            onChange={(text) => setUpdatePost(text.target.value)}/>
+            <Button 
+            variant='outlined' 
+            color='primary' 
+            onClick={handleUpdatePost}>
+                Post
+            </Button>
+        </CustomDialog>
+        </>
     )
 }
