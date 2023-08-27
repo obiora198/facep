@@ -48,7 +48,6 @@ export default function PostDisplay({postId,timePosted,body,postImage}) {
     const handleUpdatePost = async () => {
         await updateDoc(doc(db, 'posts', postId),{
             body: updatePost,
-            postedAt:new Date().getTime()
         })
         .then(() => {
             alert('Post Updated');
