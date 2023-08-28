@@ -17,7 +17,7 @@ export default function () {
     const handleGetUserPost = async () => {
         const q = query(
             collection(db,'posts'),
-            where('author','==',session?.user?.email),
+            where('author','==',`${session?.user.email}`),
             orderBy('postedAt','desc')
         );
         const onSnapShot = await getDocs(q);
