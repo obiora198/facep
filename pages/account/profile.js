@@ -9,7 +9,7 @@ import { collection,query,where,getDocs,orderBy } from 'firebase/firestore'
 
 
 
-export default function () {
+export default function Profile() {
     const {data:session} = useSession();
     const router = useRouter();
     const [userPosts,setUserPosts] = React.useState([]);

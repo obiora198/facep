@@ -11,7 +11,7 @@ import { db } from '@/settings/firebase.setting';
 import PostDisplay from '@/components/PostDisplay';
 
 
-export default function () {
+export default function Feeds() {
     const {data:session} = useSession();
     const [posts,setPosts] = useState([]);
     const router = useRouter();

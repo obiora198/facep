@@ -40,7 +40,7 @@ export default function Signup() {
 
     return (
         <>
-        <main className="h-screen flex justify-center items-center mobile-bg sm:tablet-bg lg:desktop-bg">
+        <main className="h-screen flex justify-center items-center mobile-bg sm:tablet-bg lg:desktop-bg px-4 sm:px-0">
             <div className="w-[480px] sm:min-h-[480px] flex flex-col gap-5">
                 <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <input 

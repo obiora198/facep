@@ -8,14 +8,16 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { hoursAgo } from '@/assets/hours-ago';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Button,TextField } from '@mui/material';
+import { Button,TextField, } from '@mui/material';
+import ActivityIndicator from '@/utils/activity-indicator';
 import CustomDialog from './CustomDialog';
 import { db } from '@/settings/firebase.setting';
 import { doc,deleteDoc,updateDoc } from 'firebase/firestore';
 
 export default function PostDisplay({postId,timePosted,body,postImage}) {
     const {data:session} = useSession();
-    const [updatePost,setUpdatePost] = React.useState(body);
+    const [updatePost,setUpdatePost] = React.useState(body);//for updating posts
+    const [showActivityIndicator,setShowActivityIndicator] = React.useState(false);
 
     //MENU CONTROL >>>> START
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,41 +26,60 @@ export default function PostDisplay({postId,timePosted,body,postImage}) {
     const handleClose = () => setAnchorEl(null);
     //MENU CONTROL >>>> END
 
-    //DIALOG CONTROL >>>> START
+    //DELETE DIALOG CONTROL >>>> START
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
     const handleClickOpenDialog = () => setOpenDialog(true);
     const handleCloseDialog = () => setOpenDialog(false);
+    //DELETE DIALOG CONTROL >>>> END
+    
+    //UPDATE DIALOG CONTROL >>>> START
+    const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
     const handleClickOpenUpdateDialog = () => setOpenUpdateDialog(true);
     const handleCloseUpdateDialog = () => setOpenUpdateDialog(false);
-    //DIALOG CONTROL >>>> END
+    //UPDATE DIALOG CONTROL >>>> END
 
     //FUNCTION FOR DELETE POST
     const handleDeletePost = async () => {
+        //show activity indicator
+        setShowActivityIndicator(true);
+        setOpenDialog(false);
+        handleClose();
         await deleteDoc(doc(db,'posts',postId))
         .then(() => {
+            setShowActivityIndicator(false);
             alert('post deleted');
-            setOpenDialog(false);
-            handleClose();
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            setShowActivityIndicator(false);
+            console.error(e);
+        })
     }
-
+    
     // FUNCTION TO UPDATE POST 
     const handleUpdatePost = async () => {
+        setShowActivityIndicator(true);
+        setOpenUpdateDialog(false);
+        handleClose();
         await updateDoc(doc(db, 'posts', postId),{
             body: updatePost,
+            updatedAt:new Date().getTime(),
+        },
+        {
+            merge:true,
         })
         .then(() => {
+            setShowActivityIndicator(false);
             alert('Post Updated');
-            setOpenUpdateDialog(false);
-            handleClose();
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            setShowActivityIndicator(false)
+            console.error(e)
+        })
     }
 
     return (
         <>
+        {showActivityIndicator ? <ActivityIndicator /> : null}
         <div className="border border-gray-100 bg-white rounded-md shadow-md py-4 mb-4">
             <ul className="flex justify-between px-4">
                 <li className="flex flex-row gap-1 items-center">
@@ -154,14 +175,15 @@ export default function PostDisplay({postId,timePosted,body,postImage}) {
         title='Edit post'>
             <TextField 
             multiline={true}
-            className='w-full my-4'
+            className='w-full'
             value={updatePost}
             onChange={(text) => setUpdatePost(text.target.value)}/>
             <Button 
             variant='outlined' 
             color='primary' 
-            onClick={handleUpdatePost}>
-                Post
+            onClick={handleUpdatePost}
+            style={{marginTop:8}}>
+                Update
             </Button>
         </CustomDialog>
         </>
