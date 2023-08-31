@@ -24,7 +24,7 @@ export const authOptions = {
     }),
     callbacks:{
         async session({session,user}) {
-            session.token = 'asdjchadjhsayufgasjhdvka';
+            console.log(user);
 
             return session;
         }
