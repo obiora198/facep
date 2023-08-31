@@ -2,7 +2,7 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
 
-const authOptions = {
+export const authOptions = {
     providers:[
         GoogleProvider({
             clientId:process.env.GOOGLE_CLIENT_ID,
@@ -12,7 +12,15 @@ const authOptions = {
             clientId:process.env.GITHUB_CLIENT_ID,
             clientSecret:process.env.GITHUB_CLIENT_SECRET,
         })
-    ]
+    ],
+    callbacks:{
+        async session({session,user}) {
+            session.token = 'asdjchadjhsayufgasjhdvka';
+
+            return session;
+        }
+    }
 }
 
+// export default NextAuth(authOptions);
 export default NextAuth(authOptions);

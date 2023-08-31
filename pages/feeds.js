@@ -4,6 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GoSignOut } from 'react-icons/go';
 import { useSession,signOut } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 import { useRouter } from 'next/router';
 import WritePost from '@/components/WritePost';
 import { getDocs,collection } from 'firebase/firestore'
@@ -14,13 +16,6 @@ import PostDisplay from '@/components/PostDisplay';
 export default function Feeds() {
     const {data:session} = useSession();
     const [posts,setPosts] = useState([]);
-    const router = useRouter();
-
-    React.useEffect(() => {
-        if (!session) {
-            router.push('/auth/signup')
-        }
-    },[]);
 
     //get posts from firestore
     const getPosts = async () => {
@@ -93,4 +88,25 @@ export default function Feeds() {
         </main>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+    const session = await getServerSession(context.req,context.res,authOptions);
+    
+
+    if(!session) {
+        return {
+            redirect:{
+                destination:'/auth/signup',
+                permanent:false,
+            }
+        }
+    }
+
+    return {
+        props:{
+            // session: session.JSON.parse(JSON.stringify(session))
+            session: session
+        }
+    }
 }
