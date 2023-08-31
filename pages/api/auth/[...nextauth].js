@@ -24,7 +24,7 @@ export const authOptions = {
     }),
     callbacks:{
         async session({session,user}) {
-            console.log(user);
+            // console.log(user);
 
             return session;
         }
