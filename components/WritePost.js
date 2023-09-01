@@ -10,6 +10,20 @@ import { rangeOfRandNums } from '@/assets/range-of-rand-nums';
 export default function WritePost() {
     const {data:session} = useSession();
     const [formInput,setFormInput] = useState('');
+    const [selectedFile,setSelectedFile] = useState(null);
+
+    const imageToPost = (e) => {
+        const reader = new FileReader();
+
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0])
+        }
+
+        reader.onload = (readEvent) => {
+            setSelectedFile(readEvent.target.result);
+        }
+    }
+    console.log(selectedFile);
 
     //create post to firestore 
     const handleCreatePost = async () => {
@@ -43,12 +57,22 @@ export default function WritePost() {
                     value={formInput}
                     onChange={(text) => setFormInput(text.target.value)}/>
 
-                    {formInput.length > 0 
-                    ? <Button 
-                    variant='outlined'
-                    className='block w-[100px]'
-                    onClick={handleCreatePost}>Post</Button>
-                    : null}
+
+                        {formInput.length > 0 ?
+                        <div className='flex flex-col gap-6'>
+                            <input 
+                            type="file"
+                            accept="image/*"
+                            onChange={imageToPost}
+                            />
+
+                            <Button 
+                            variant='outlined'
+                            className='block w-[100px]'
+                            onClick={handleCreatePost}>Post</Button>
+                        </div>  
+                        : null}
+                    
                 </div>
             </div>
         </div>
