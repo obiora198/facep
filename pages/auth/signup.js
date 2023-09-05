@@ -14,7 +14,7 @@ const validationRules = yup.object().shape({
     .min(8,'must be up to 8 characters')
     .max(36,'cannot be more than 36 charactters')
     .oneOf([yup.ref('passwordConfirmation'),null],'your password must match')
-})
+});
 
 export default function Signup() {
     const {data:session} = useSession();
