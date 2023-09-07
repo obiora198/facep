@@ -6,7 +6,6 @@ import { GoSignOut } from 'react-icons/go';
 import { useSession,signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
-import { useRouter } from 'next/router';
 import WritePost from '@/components/WritePost';
 import { getDocs,collection } from 'firebase/firestore'
 import { db } from '@/settings/firebase.setting';

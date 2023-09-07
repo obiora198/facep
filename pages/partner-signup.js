@@ -6,6 +6,8 @@ import { TextField } from '@mui/material';
 import { db,storage } from '@/settings/firebase.setting';
 import { collection,addDoc,updateDoc,doc } from 'firebase/firestore'
 import { ref,uploadString,getDownloadURL } from 'firebase/storage'
+import ActivityIndicator from '@/utils/activity-indicator';
+import CustomDialog from '@/components/CustomDialog';
 
 const validationRules = yup.object().shape({
     compName:yup.string().required(),
@@ -18,11 +20,19 @@ const validationRules = yup.object().shape({
 
 export default function PartnerSignup() {
     const [selectedFile,setSelectedFile] = useState(null);
+    const [showActivityIndicator, setShowActivityIndicactor] = useState(false);
+
+    //CONFIRMATION DIALOG >>>> START
+    const [openDialog, setOpenDialog] = useState(false);
+    const handleClickOpenDialog = () => setOpenDialog(true);
+    const handleCloseDialog = () => setOpenDialog(false);
+    //CONFIRMATION DIALOG >>>> END
     
     const {handleBlur,handleSubmit,handleChange,errors,touched,values} = useFormik({
         initialValues:{compName:'',compDesc:'',email:'',address:'',phone:''},
         onSubmit: values => {
-            console.log(values);
+            // console.log(values);
+            handleCreatePartner();
         },
         validationSchema:validationRules
     });
@@ -40,6 +50,7 @@ export default function PartnerSignup() {
     }
 
     const handleCreatePartner = async () => {
+        setShowActivityIndicactor(true);
         //use company name to form a slug
         const strToArray = values.compName.split(' ');
         let slug = strToArray.join('-').toLowerCase();
@@ -52,7 +63,7 @@ export default function PartnerSignup() {
             address:values.address,
             pagePath:slug,
             createdAt:new Date().getTime(),
-            imageUrl:cdnImages[rangeOfRandNums(0,cdnImages.length - 1)]
+            imageUrl:null,
         })
 
         const imageRef = ref(storage,`partners/${docRes.id}/image`);
@@ -63,14 +74,18 @@ export default function PartnerSignup() {
                 updateDoc(doc(db,'partners',docRes.id),{
                     imageUrl:imgUrl,
                 })
-                setFormInput('')
-                alert('Your post was published')
+                setOpenDialog(true);
+                setShowActivityIndicactor(false);
             })
             .catch((e) => console.error(e))
 
     }
 
   return (
+    showActivityIndicator 
+    ? 
+    <ActivityIndicator/> 
+    :
     <>
       <Head>
         <link rel="icon" href="/facepal_icon_logo.ico" />
@@ -78,7 +93,7 @@ export default function PartnerSignup() {
         <meta name="keywords" content="facepal" />
         <title>facepal | Become a Partner</title>
       </Head>
-      <div className="h-screen w-full flex justify-center items-center mobile-bg sm:tablet-bg lg:desktop-bg">
+      <div className="min-h-screen w-full flex justify-center items-center mobile-bg sm:tablet-bg lg:desktop-bg">
         <div className="w-full sm:w-[520px] flex flex-col justify-center items-center gap-4 px-4 sm:px-0 py-6">
 
             <h1 className='text-white text-3xl text-center'>Partner Account Application</h1>
@@ -154,6 +169,12 @@ export default function PartnerSignup() {
             </form>
         </div>
       </div>
+      <CustomDialog 
+        openProp={openDialog} 
+        handleCloseProp={handleCloseDialog} 
+        title='Confirmation'>
+            <p>You have successfully created a partner account</p>
+        </CustomDialog>
     </>
   )
 }
