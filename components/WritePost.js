@@ -1,6 +1,5 @@
-import { useState,useContext } from 'react';
+import React from 'react';
 import Image from 'next/image'
-import { useSession } from 'next-auth/react';
 import { Button,TextField } from '@mui/material';
 import { db,storage } from '@/settings/firebase.setting';
 import { collection,addDoc,updateDoc,doc } from 'firebase/firestore'
@@ -10,10 +9,10 @@ import { ref,uploadString,getDownloadURL } from 'firebase/storage'
 import { AppContext } from '@/settings/globals';
 
 export default function WritePost() {
-    const {data:session} = useSession();
-    const [formInput,setFormInput] = useState('');
-    const [selectedFile,setSelectedFile] = useState(null);
-    const { users } = useContext(AppContext)
+    const {data:session} = React.useSession();
+    const [formInput,setFormInput] = React.useState('');
+    const [selectedFile,setSelectedFile] = React.useState(null);
+    const { users } = React.useContext(AppContext);
 
     const getAuthorUid = () => {
         const author = users.filter(item => item.data.email == session.user.email)
