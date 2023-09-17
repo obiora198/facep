@@ -13,11 +13,23 @@ import ActivityIndicator from '@/utils/activity-indicator';
 import CustomDialog from './CustomDialog';
 import { db } from '@/settings/firebase.setting';
 import { doc,deleteDoc,updateDoc } from 'firebase/firestore';
+import { AppContext } from '@/settings/globals';
 
-export default function PostDisplay({postId,timePosted,body,postImage}) {
+export default function PostDisplay({postId,timePosted,body,postImage,authorUid}) {
     const {data:session} = useSession();
     const [updatePost,setUpdatePost] = React.useState(body);//for updating posts
     const [showActivityIndicator,setShowActivityIndicator] = React.useState(false);
+    const { users }  = React.useContext(AppContext);
+
+    const getPostByAuthorInfo = (authorUID) => {
+      const filteredUser = users.filter(item => item.id == authorUid);
+
+      return {
+            a_name:filteredUser[0]?.data.name,
+            a_photo:filteredUser[0]?.data.image
+        }
+    }
+    const currentUserInfo = getPostByAuthorInfo();
 
     //MENU CONTROL >>>> START
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -85,11 +97,11 @@ export default function PostDisplay({postId,timePosted,body,postImage}) {
                 <li className="flex flex-row gap-1 items-center">
                     <Image 
                     className="rounded-full" 
-                    src={session?.user.image} 
+                    src={currentUserInfo.a_photo} 
                     width={40} height={40} 
                     alt="profile photo"/>                                
                     <div className='flex flex-col'>
-                        <small className="text-gray-800">{session?.user.name}</small>
+                        <small className="text-gray-800">{currentUserInfo.a_name}</small>
                         <small className='text-gray-500'>
                             <span>{hoursAgo(timePosted)} hours ago</span>
                             <PublicIcon sx={{fontSize:15}} />

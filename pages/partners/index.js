@@ -1,8 +1,30 @@
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
+import { db } from "@/settings/firebase.setting";
+import { getDocs,collection,orderBy,query } from "firebase/firestore";
 
-export default function Paryners() {
+export async function getStaticProps() {
+    const partners = [];
+    const q = query(collection(db,'partners'),orderBy('createdAt','desc'));
+    const onSnapShot = await getDocs(q);
+    onSnapShot.docs.map(doc => {
+        let fireDoc = {data:doc.data()};
+        fireDoc.id = doc.id;
+        partners.push(fireDoc);
+    })
+    
+
+    return {
+        props:{
+            data:partners
+        }
+    }
+}
+
+export default function Paryners({data}) {
+    console.log(data);
     return (
         <>
         <Head>

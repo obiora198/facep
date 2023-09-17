@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import Image from 'next/image'
 import { useSession } from 'next-auth/react';
 import { Button,TextField } from '@mui/material';
@@ -7,11 +7,21 @@ import { collection,addDoc,updateDoc,doc } from 'firebase/firestore'
 import { cdnImages } from '@/assets/demo_cdn_images';
 import { rangeOfRandNums } from '@/assets/range-of-rand-nums';
 import { ref,uploadString,getDownloadURL } from 'firebase/storage'
+import { AppContext } from '@/settings/globals';
 
 export default function WritePost() {
     const {data:session} = useSession();
     const [formInput,setFormInput] = useState('');
     const [selectedFile,setSelectedFile] = useState(null);
+    const { users } = useContext(AppContext)
+
+    const getAuthorUid = () => {
+        const author = users.filter(item => item.data.email == session.user.email)
+        const authorUid = author[0]?.id
+
+        return authorUid
+    }
+    // console.log(users);
 
     const imageToPost = (e) => {
         const reader = new FileReader();
@@ -30,29 +40,23 @@ export default function WritePost() {
     const handleCreatePost = async () => {
         const docRes = await addDoc(collection(db,'posts'),{
             body:formInput,
-            author:session.user.email,
+            author:getAuthorUid(),
             postedAt:new Date().getTime(),
             imageUrl:cdnImages[rangeOfRandNums(0,cdnImages.length - 1)]
         })
-        // .then(() => {
-        //     setFormInput('')
-        //     alert('Your post was published')
-        // })
-        // .catch(error => console.error(error));
 
         const imageRef = ref(storage,`posts/${docRes.id}/image`);
 
-            await uploadString(imageRef,selectedFile,'data_url')
-            .then(async () => {
-                const imgUrl = await getDownloadURL(imageRef);
-                updateDoc(doc(db,'posts',docRes.id),{
-                    imageUrl:imgUrl,
-                })
-                setFormInput('')
-                alert('Your post was published')
+        await uploadString(imageRef,selectedFile,'data_url')
+        .then(async () => {
+            const imgUrl = await getDownloadURL(imageRef);
+            updateDoc(doc(db,'posts',docRes.id),{
+                imageUrl:imgUrl,
             })
-            .catch((e) => console.error(e))
-
+            setFormInput('')
+            alert('Your post was published')
+        })
+        .catch((e) => console.error(e))
     }
     
     return (

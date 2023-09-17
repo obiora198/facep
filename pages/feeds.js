@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Image from 'next/image'
 import Head from 'next/head';
 import Link from 'next/link';
@@ -15,6 +15,7 @@ import PostDisplay from '@/components/PostDisplay';
 export default function Feeds() {
     const {data:session} = useSession();
     const [posts,setPosts] = useState([]);
+    
 
     //get posts from firestore
     const getPosts = async () => {
@@ -77,7 +78,8 @@ export default function Feeds() {
                                 postId={post.id}
                                 timePosted={post.data.postedAt}
                                 body={post.data.body}
-                                postImage={post.data.imageUrl}/>
+                                postImage={post.data.imageUrl}
+                                authorUid={post.data.author}/>
                             </div>
                         ))
                     }
