@@ -1,8 +1,10 @@
-import Image from "next/image";
+'use client'
+// import Image from "next/image";
 import Head from "next/head";
 import { db } from "@/settings/firebase.setting";
 import { query,where,getDocs,collection } from "firebase/firestore";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
+import { usePathname } from 'next/navigation'
 
 export async function getStaticPaths() {
     const onSnapshot = await getDocs(collection(db,'partners'));
@@ -21,11 +23,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps() {
-    const router = useRouter();
+    const pathname = usePathname();
+    // const router = useRouter();
     let partnerDoc = [];
     
     const getPartnerInfo = async () => {
-        const q = query(collection(db,'partners'),where('pagePath','==',`${router.query.pagePath}`));
+        const q = query(collection(db,'partners'),where('pagePath','==',pathname));
         const onSnapShot = await getDocs(q);
         onSnapShot.docs.map(doc => {
             let doc_ = {
