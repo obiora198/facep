@@ -21,8 +21,8 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps() {
+    const router = useRouter();
     let partnerDoc = [];
-    
     
     const getPartnerInfo = async () => {
         const q = query(collection(db,'partners'),where('pagePath','==',`${router.query.pagePath}`));
