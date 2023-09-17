@@ -22,7 +22,7 @@ export async function getStaticPaths() {
     }
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({params}) {
     const pathname = usePathname();
     // const router = useRouter();
     let partnerDoc = [];
@@ -42,7 +42,7 @@ export async function getStaticProps() {
 
     return {
         props:{
-            data:partnerDoc
+            partnerDoc
         }
     }
 }
